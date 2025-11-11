@@ -6,33 +6,36 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/auth/login`
+  : "http://localhost:5000/api/auth/login";
+
   async function handleLogin(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      alert(data.error || "Erro ao fazer login");
-      return;
+      if (!response.ok) {
+        alert(data.error || "Erro ao fazer login");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      alert("Login bem-sucedido!");
+      navigate("/home");
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro de conexão com o servidor");
     }
-
-    localStorage.setItem("token", data.token);
-    alert("Login bem-sucedido!");
-    navigate("/home");
-
-  } catch (err) {
-    console.error(err);
-    alert("Erro de conexão com o servidor");
   }
-}
-
 
   return (
     <div style={{

@@ -6,7 +6,9 @@ export default function TutorsCRUD() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState(null);
 
-  const API_URL = "http://localhost:5000/api/tutors";
+  const API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/tutors`
+  : "http://localhost:5000/api/tutors";
 
   // carregar todos os tutores
   async function loadTutors() {
